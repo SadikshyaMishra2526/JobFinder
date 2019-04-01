@@ -40,7 +40,7 @@ public class Git_Description extends AppCompatActivity {
     List<GitJobModel>gitJobModel;
     private ProgressBar progressBar_description;
 
-
+    String query;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,7 +69,7 @@ public class Git_Description extends AppCompatActivity {
 
             Retrofit retrofit = builder.build();
             apiInterface = retrofit.create(ApiInterface.class);
-            Call<List<GitJobModel>> call = apiInterface.getGitJob();
+            Call<List<GitJobModel>> call = apiInterface.getGitJob(query);
             call.enqueue(new Callback<List<GitJobModel>>() {
                 @Override
                 public void onResponse(Call<List<GitJobModel>> call, Response<List<GitJobModel>> response) {

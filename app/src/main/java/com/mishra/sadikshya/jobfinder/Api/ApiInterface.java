@@ -11,16 +11,26 @@ import retrofit2.http.Query;
 
 public interface ApiInterface {
 
-    @GET("positions.json")
-    Call<List<GitJobModel>> getGitJob();
 
     @GET("search.json")
-    Call<List<GovJobModel>> getGovJob();
+    Call<List<GovJobModel>> getGovJob(@Query("location")String location);
 
-    @GET("search.json")
-    Call<List<GovJobModel>> getGovSearchJob();
 
     @GET("positions.json")
-    Call<List<GitJobModel>> getGitSearchJob(@Query("location")String location);
+    Call<List<GitJobModel>> getGitJob(@Query("location")String location);
+
+    @GET("search.json")
+    Call<List<GovJobModel>> getGovJobProvider(@Query("prodiver")String location);
+
+
+    @GET("positions.json")
+    Call<List<GitJobModel>> getGitJobProvider(@Query("provider")String location);
+
+    @GET("search.json")
+    Call<List<GovJobModel>> getGovJobBy(@Query("position")String location);
+
+
+    @GET("positions.json")
+    Call<List<GitJobModel>> getGitJobBy(@Query("position")String location);
 
 }

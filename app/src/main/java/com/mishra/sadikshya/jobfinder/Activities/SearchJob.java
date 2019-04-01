@@ -88,7 +88,7 @@ public class SearchJob extends AppCompatActivity implements GitJobAdapter.OnItem
                     .addConverterFactory(GsonConverterFactory.create());
             Retrofit retrofit = builder.build();
             apiInterface = retrofit.create(ApiInterface.class);
-            Call<List<GitJobModel>> call = apiInterface.getGitSearchJob(query);
+            Call<List<GitJobModel>> call = apiInterface.getGitJob(query);
             call.enqueue(new Callback<List<GitJobModel>>() {
                 @Override
                 public void onResponse(Call<List<GitJobModel>> call, Response<List<GitJobModel>> response) {

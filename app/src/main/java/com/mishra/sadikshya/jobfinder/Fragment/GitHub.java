@@ -46,6 +46,7 @@ public class GitHub extends Fragment implements GitJobAdapter.OnItemClickListene
     private TextView searchFab_text, providerFab_text, locationFab_text;
     Animation fabOpen, fabClose, fabAntiClock, fabClock;
     boolean isOpen = false;
+    String query;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -124,7 +125,7 @@ public class GitHub extends Fragment implements GitJobAdapter.OnItemClickListene
 
             Retrofit retrofit = builder.build();
             apiInterface = retrofit.create(ApiInterface.class);
-            Call<List<GitJobModel>> call = apiInterface.getGitJob();
+            Call<List<GitJobModel>> call = apiInterface.getGitJob(query);
             call.enqueue(new Callback<List<GitJobModel>>() {
                 @Override
                 public void onResponse(Call<List<GitJobModel>> call, Response<List<GitJobModel>> response) {

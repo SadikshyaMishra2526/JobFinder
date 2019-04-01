@@ -35,6 +35,7 @@ public class Gov extends Fragment implements GovJobAdapter.OnItemClickListener {
     private ApiInterface apiInterface;
     private List<GovJobModel> govJobModel;
     private GovJobAdapter govJobAdapter;
+    String query;
 //    private FloatingActionButton searchFab, providerFab, locationFab;
 //    private TextView  searchFab_text, providerFab_text, locationFab_text;
 //    Animation fabOpen, fabClose, fabAntiClock, fabClock;
@@ -119,7 +120,7 @@ public class Gov extends Fragment implements GovJobAdapter.OnItemClickListener {
 
             Retrofit retrofit = builder.build();
             apiInterface = retrofit.create(ApiInterface.class);
-            Call<List<GovJobModel>> call = apiInterface.getGovJob();
+            Call<List<GovJobModel>> call = apiInterface.getGovJob(query);
             call.enqueue(new Callback<List<GovJobModel>>() {
                 @Override
                 public void onResponse(Call<List<GovJobModel>> call, Response<List<GovJobModel>> response) {

@@ -35,6 +35,7 @@ public class Gov_Description extends AppCompatActivity {
     private ProgressBar progressBar_description;
     String des = null;
     List<String>loc;
+    String query;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -60,7 +61,7 @@ public class Gov_Description extends AppCompatActivity {
 
             Retrofit retrofit = builder.build();
             apiInterface = retrofit.create(ApiInterface.class);
-            Call<List<GovJobModel>> call = apiInterface.getGovJob();
+            Call<List<GovJobModel>> call = apiInterface.getGovJob(query);
             call.enqueue(new Callback<List<GovJobModel>>() {
                 @Override
                 public void onResponse(Call<List<GovJobModel>> call, Response<List<GovJobModel>> response) {
@@ -75,8 +76,6 @@ public class Gov_Description extends AppCompatActivity {
                         }
 
                     }
-
-
                     url_description.setText(govJobModel.get(job_Id).getUrl());
                     created_at_description.setText(govJobModel.get(job_Id).getStartDate());
                     max_description.setText(govJobModel.get(job_Id).getMaximum().toString());
