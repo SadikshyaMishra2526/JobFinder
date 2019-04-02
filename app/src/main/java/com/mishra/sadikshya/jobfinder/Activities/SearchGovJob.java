@@ -14,9 +14,10 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.Toast;
 
-import com.mishra.sadikshya.jobfinder.Adapter.GitJobAdapter;
+import com.mishra.sadikshya.jobfinder.Adapter.GovJobAdapter;
 import com.mishra.sadikshya.jobfinder.Api.ApiInterface;
-import com.mishra.sadikshya.jobfinder.Model.GitJobModel;
+import com.mishra.sadikshya.jobfinder.Constants.Gov_Client;
+import com.mishra.sadikshya.jobfinder.Model.GovJobModel;
 import com.mishra.sadikshya.jobfinder.R;
 
 import java.util.List;
@@ -24,25 +25,22 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
-import static com.mishra.sadikshya.jobfinder.Constants.Constant.BASE_URL_GIT;
 import static com.mishra.sadikshya.jobfinder.Constants.Constant.CLICKED_ID;
 
-public class SearchJob extends AppCompatActivity implements GitJobAdapter.OnItemClickListener{
+public class SearchGovJob extends AppCompatActivity implements GovJobAdapter.OnItemClickListener{
     ApiInterface apiInterface;
-    private List<GitJobModel> gitJobModel;
-    private GitJobAdapter gitJobAdapter;
+    private List<GovJobModel> govJobModel;
+    private GovJobAdapter govJobAdapter;
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
-    String query;
+    String query,position;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_search);
         recyclerView = findViewById(R.id.gov_job);
-        layoutManager = new GridLayoutManager(SearchJob.this, 1);
+        layoutManager = new GridLayoutManager(SearchGovJob.this, 1);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
         recyclerView.setFocusable(false);
@@ -58,20 +56,22 @@ public class SearchJob extends AppCompatActivity implements GitJobAdapter.OnItem
             public boolean onQueryTextSubmit(String s) {
                 System.out.println("From Submit");
                 query=s;
-                forGitJob();
+                position=s;
+                forJob();
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String s) {
                 query=s;
-                forGitJob();
+                position=s;
+                forJob();
                 return false;
             }
         });
 
-        if(query!=null){
-            forGitJob();
+        if(query!=null ||position!=null){
+            forJob();
         }else {
             Toast.makeText(this, "Please Enter Your Search", Toast.LENGTH_SHORT).show();
         }
@@ -81,28 +81,25 @@ public class SearchJob extends AppCompatActivity implements GitJobAdapter.OnItem
         return super.onCreateOptionsMenu(menu);
     }
 
-    private void forGitJob() {
+    private void forJob() {
         try {
-            Retrofit.Builder builder = new Retrofit.Builder()
-                    .baseUrl(BASE_URL_GIT)
-                    .addConverterFactory(GsonConverterFactory.create());
-            Retrofit retrofit = builder.build();
-            apiInterface = retrofit.create(ApiInterface.class);
-            Call<List<GitJobModel>> call = apiInterface.getGitJob(query);
-            call.enqueue(new Callback<List<GitJobModel>>() {
+            apiInterface = Gov_Client.createGovService(ApiInterface.class);
+            Call<List<GovJobModel>> call = apiInterface.getGovJob(query,position);
+
+            call.enqueue(new Callback<List<GovJobModel>>() {
                 @Override
-                public void onResponse(Call<List<GitJobModel>> call, Response<List<GitJobModel>> response) {
-                    gitJobModel = response.body();
+                public void onResponse(Call<List<GovJobModel>> call, Response<List<GovJobModel>> response) {
+                    govJobModel = response.body();
                     if (this != null) {
-                        gitJobAdapter = new GitJobAdapter(SearchJob.this,  gitJobModel);
-                        recyclerView.setAdapter(gitJobAdapter);
-                        gitJobAdapter.setOnItemClickListener(SearchJob.this);
+                        govJobAdapter = new GovJobAdapter(SearchGovJob.this,  govJobModel);
+                        recyclerView.setAdapter(govJobAdapter);
+                        govJobAdapter.setOnItemClickListener(SearchGovJob.this);
 
                     }
                 }
 
                 @Override
-                public void onFailure(Call<List<GitJobModel>> call, Throwable t) {
+                public void onFailure(Call<List<GovJobModel>> call, Throwable t) {
 
                 }
             });
@@ -116,14 +113,13 @@ public class SearchJob extends AppCompatActivity implements GitJobAdapter.OnItem
 
     @Override
     public void onItemClick(int position, View itemView) {
-        Intent intent = new Intent(SearchJob.this, Git_Description.class);
+        Intent intent = new Intent(SearchGovJob.this, Gov_Description.class);
         intent.putExtra(CLICKED_ID, position);
 
-
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-           getWindow().setEnterTransition(new Fade(Fade.IN));
+            getWindow().setEnterTransition(new Fade(Fade.IN));
             getWindow().setExitTransition(new Fade(Fade.OUT));
-            ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(SearchJob.this, Pair.create(itemView.findViewById(R.id.cardView_git), "preferred"));
+            ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(SearchGovJob.this, Pair.create(itemView.findViewById(R.id.cardView_gov), "preferred"));
             startActivity(intent, options.toBundle());
         } else {
             startActivity(intent);

@@ -26,7 +26,8 @@
             android:label="GitHub Job Details"/>
         <activity android:name=".Activities.Gov_Description"
             android:label="Government Job Details"/>
-        <activity android:name=".Activities.SearchJob"/>
+        <activity android:name=".Activities.SearchGitJob"/>
+        <activity android:name=".Activities.SearchGovJob"/>
     </application>
 
 </manifest>
